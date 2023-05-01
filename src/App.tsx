@@ -52,7 +52,7 @@ const App = () : JSX.Element => {
   return (
     <div className="App">
       <span className='heading'>Countries</span>
-      <SearchField />
+      <SearchField countries={countriesData} />
       <div className='tableInfo'><CountriesTable countries={records}/></div>
         <ul className='pagination'>
             <li className='page-item'>
