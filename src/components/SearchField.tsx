@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import Popup from './Popup';
+import {CountriesData, Country } from './types/TableType';
 
-type Name = {
-  common: string,
-}
 
-type CountriesData = Country[];
+// type Name = {
+//   common: string,
+// }
 
-interface Country {
-  name: Name;
-  capital: string[];
-  population: number;
-}
+// type CountriesData = Country[];
+
+// interface Country {
+//   name: Name;
+//   capital: string[];
+//   population: number;
+// }
 
 const SearchField = ({ countries } : {countries: CountriesData}) => {
   const [countryName, setCountryState] = useState('');

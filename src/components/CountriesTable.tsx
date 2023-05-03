@@ -1,21 +1,8 @@
 import React, {useState, useCallback} from 'react'
 import Popup from './Popup';
-//pogledni kak dyrpash ot apito
-type Name = {
-  common: string,
-}
-
-type SortKeys = keyof Country;
-
-type CountriesData = Country[];
-
-type SortOrder = 'asc' | 'desc';
-
-interface Country {
-  name: Name;
-  capital: string[];
-  population: number;
-}
+import {CountriesData, Country } from './types/TableType';
+import {SortKeys, SortOrder} from './types/SortTypes'
+import Pagination from './Pagination';
 
 function sortData({tableData, sortKey, reverse} : {
   tableData: CountriesData,
@@ -39,15 +26,27 @@ function sortData({tableData, sortKey, reverse} : {
 
 const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element => {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [sortKey, setSortKey] = useState<SortKeys>("name")
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
 
+  const changeCPage = (n: number) : void => {
+    setCurrentPage(n);
+  }
+
+  const countriesPerPage : number = 10;
+  const lastIndex = currentPage * countriesPerPage;
+  const firstIndex = lastIndex - countriesPerPage;
+  
+  const npage = Math.ceil(countries.length / countriesPerPage);
+
   const sortedCountries = useCallback(
-    () => sortData({tableData: countries, sortKey, reverse: sortOrder === 'desc'}),
+    () : CountriesData => sortData({tableData: countries, sortKey, reverse: sortOrder === 'desc'}),
      [countries, sortKey, sortOrder]
   );
 
+  const sortCountries = sortedCountries();
+  const records = sortCountries.slice(firstIndex, lastIndex);
 
   if (countries.length === 0) {
     return <div>Loading table</div>;
@@ -57,11 +56,11 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
   console.log(countryProps);
   // const countryProps = ['name', 'capital', 'population'];
 
-  const selectCountry = (country: Country) => {
+  const selectCountry = (country: Country) : void => {
     setSelectedCountry(country);
   };
 
-  const closePopup = () => {
+  const closePopup = () : void => {
     setSelectedCountry(null);
   };
 
@@ -87,7 +86,7 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
           </tr>
         </thead>
         <tbody>
-          {sortedCountries().map((country: Country) => (
+          {records.map((country: Country) => (
             <tr key={country.name.common} onClick={() => selectCountry(country)}>
               {countryProps.map((header: string) => (
                 <td key={`${country.name.common}-${header}`.toLowerCase()}>
@@ -104,7 +103,7 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
           ))}
         </tbody>
       </table>
-
+      <Pagination currentPage={currentPage} npage={npage} changeCPage={changeCPage} />
       {selectedCountry &&
         <div className="popup-wrapper">
           <div className="overlay" onClick={closePopup}></div>

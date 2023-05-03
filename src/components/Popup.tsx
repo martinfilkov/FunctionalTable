@@ -1,14 +1,5 @@
 import React from 'react'
-
-type Name = {
-    common: string,
-  }
-  
-interface Country {
-    name: Name;
-    capital: string[];
-    population: number;
-  }
+import {Country } from './types/TableType';
 
 const Popup= ({ country } : {country: Country}) : JSX.Element => {
     const { name, capital, population } = country;
