@@ -2,43 +2,30 @@ import React, { useState } from 'react'
 import Popup from './Popup';
 import {CountriesData, Country } from './types/TableType';
 
-
-// type Name = {
-//   common: string,
-// }
-
-// type CountriesData = Country[];
-
-// interface Country {
-//   name: Name;
-//   capital: string[];
-//   population: number;
-// }
-
 const SearchField = ({ countries } : {countries: CountriesData}) => {
   const [countryName, setCountryState] = useState('');
   const [filteredCountries, setFilteredState] = useState<CountriesData>([]);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null); 
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) : void => {
     setCountryState(event.target.value);
     onSearch((event.target.value).toLowerCase());
   }
 
-  const onSearch = (searchedCountry: string) => {
+  const onSearch = (searchedCountry: string) : void => {
     const filteredCountries = countries.filter((country) => {
       return country.name.common.toLowerCase().includes(searchedCountry)
     });
     setFilteredState(filteredCountries);
   }
 
-  const onSelect = (selectedCountry: Country) => {
+  const onSelect = (selectedCountry: Country) : void => {
     setFilteredState([]);
     setCountryState('');
     setSelectedCountry(selectedCountry);
   }
 
-  const closePopup = () => {
+  const closePopup = () : void => {
     setSelectedCountry(null);
   };
 

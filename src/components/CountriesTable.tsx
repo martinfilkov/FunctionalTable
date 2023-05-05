@@ -18,7 +18,7 @@ function sortData({tableData, sortKey, reverse} : {
     else return a[sortKey] > b[sortKey] ? 1 : -1;
   });
 
-  console.log('sortedData', sortedCountries)
+  // console.log('sortedData', sortedCountries)
   if(reverse) return sortedCountries.reverse()
 
   return sortedCountries;
@@ -52,8 +52,8 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
     return <div>Loading table</div>;
   }
 
-  const countryProps = Object.keys(countries[0]);
-  console.log(countryProps);
+  const countryProps = Object.keys(countries[0]) as (keyof Country)[];
+  // console.log(countryProps);
   // const countryProps = ['name', 'capital', 'population'];
 
   const selectCountry = (country: Country) : void => {
@@ -64,7 +64,7 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
     setSelectedCountry(null);
   };
 
-  const changeSort = (newSortKey: SortKeys) => {
+  const changeSort = (newSortKey: SortKeys) : void => {
     if (newSortKey === sortKey) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -73,12 +73,16 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
     }
   };
 
+  // const getNested = (obj: Country, header: keyof Country) => {
+
+  // }
+
   return (
     <div className="countries-table">
       <table>
         <thead>
           <tr>
-            {countryProps.map((header: string) => (
+            {countryProps.map((header: keyof Country) => (
               <th key={header} onClick={() => changeSort(header as SortKeys)}>
                 {header.toUpperCase()}
               </th>
@@ -88,14 +92,17 @@ const CountriesTable= ({ countries } : {countries: CountriesData}) : JSX.Element
         <tbody>
           {records.map((country: Country) => (
             <tr key={country.name.common} onClick={() => selectCountry(country)}>
-              {countryProps.map((header: string) => (
+              {countryProps.map((header: keyof Country) => (
                 <td key={`${country.name.common}-${header}`.toLowerCase()}>
                   {
-                    header === 'name'
-                      ? country.name.common
-                      : header === 'capital'
-                      ? country.capital.join(' ')
-                      : country.population
+                    // header === 'name'
+                    //   ? country.name.common
+                    //   : header === 'capital'
+                    //   ? country.capital.join(' ')
+                    //   : country.population
+
+                    // typeof country[header] === 'object' && country[header] !== null ? getNested() : String(country[header])
+                    header === 'name' ? country.name.common : String(country[header])
                   }
                 </td>
               ))}
